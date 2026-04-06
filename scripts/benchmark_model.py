@@ -32,7 +32,10 @@ def load_model(model_id: str, quant: str, cache_dir: str, is_vision: bool = Fals
         "trust_remote_code": True,
     }
 
-    if quant == "int4":
+    if quant == "awq":
+        # Pre-quantized AWQ model — no BitsAndBytes needed
+        kwargs["torch_dtype"] = torch.float16
+    elif quant == "int4":
         kwargs["quantization_config"] = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_compute_dtype=torch.float16,
@@ -52,14 +55,21 @@ def load_model(model_id: str, quant: str, cache_dir: str, is_vision: bool = Fals
                 model = auto_cls.from_pretrained(model_id, **kwargs)
                 print(f"  Loaded with {auto_cls_name}")
                 break
-            except (ImportError, AttributeError, ValueError):
+            except (ImportError, AttributeError, ValueError) as e:
+                print(f"  {auto_cls_name} failed: {e}")
                 continue
         if model is None:
             model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
         processor = AutoProcessor.from_pretrained(model_id, cache_dir=cache_dir, trust_remote_code=True)
         tokenizer = processor.tokenizer if hasattr(processor, 'tokenizer') else processor
     else:
-        model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
+        # Try ImageTextToText first (for multimodal models like Gemma 4)
+        try:
+            from transformers import AutoModelForImageTextToText
+            model = AutoModelForImageTextToText.from_pretrained(model_id, **kwargs)
+            print(f"  Loaded as ImageTextToText (multimodal model)")
+        except Exception:
+            model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
         tokenizer = AutoTokenizer.from_pretrained(model_id, cache_dir=cache_dir, trust_remote_code=True)
         processor = None
 
@@ -153,7 +163,7 @@ def benchmark_quality(model, tokenizer):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", required=True, help="HuggingFace model ID")
-    parser.add_argument("--quant", default="int4", choices=["fp16", "int8", "int4"])
+    parser.add_argument("--quant", default="int4", choices=["fp16", "int8", "int4", "awq"])
     parser.add_argument("--vision", action="store_true", help="Load as vision model")
     parser.add_argument("--cache-dir", default="/data/llm-eval/cache")
     parser.add_argument("--output-dir", default="/data/llm-eval/results")

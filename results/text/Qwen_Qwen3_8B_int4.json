@@ -1,0 +1,48 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "quantization": "int4",
+  "is_vision": false,
+  "load": {
+    "load_time_s": 1757.3437836170197,
+    "vram_gb": 6.413855744,
+    "peak_vram_gb": 6.490906624
+  },
+  "speed": {
+    "avg_tokens_per_s": 42.0
+  },
+  "speed_details": [
+    {
+      "prompt_idx": 0,
+      "input_tokens": 21,
+      "output_tokens": 256,
+      "time_s": 6.46,
+      "tokens_per_s": 39.6,
+      "output_preview": "<think>\nOkay, the user wants an explanation of how A* pathfinding works in three sentences. Let me start by recalling what A* is. It's a popular algorithm for finding the shortest path in a graph, rig"
+    },
+    {
+      "prompt_idx": 1,
+      "input_tokens": 21,
+      "output_tokens": 256,
+      "time_s": 5.8,
+      "tokens_per_s": 44.1,
+      "output_preview": "<think>\nOkay, I need to write a Python function that computes the shortest path between two points. Let me think about how to approach this. The user didn't specify the context, like if it's on a grid"
+    },
+    {
+      "prompt_idx": 2,
+      "input_tokens": 23,
+      "output_tokens": 256,
+      "time_s": 6.05,
+      "tokens_per_s": 42.3,
+      "output_preview": "<think>\nOkay, so I need to figure out the key differences between minimum-snap and minimum-jerk trajectories. Let me start by recalling what I know about these terms. \n\nFirst, both are types of trajec"
+    }
+  ],
+  "quality": {
+    "correct": 2,
+    "total": 5,
+    "accuracy": 40.0
+  },
+  "final_vram_gb": 6.4,
+  "peak_vram_gb": 6.6,
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "timestamp": "2026-04-06 16:01:35"
+}
