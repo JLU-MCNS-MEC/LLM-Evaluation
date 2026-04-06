@@ -1,0 +1,43 @@
+{
+  "model": "/data/llm-eval/models/text/gemma-4-26B-A4B-it-UD-IQ4_XS.gguf",
+  "model_name": "gemma-4-26B-A4B-it-UD-IQ4_XS",
+  "n_gpu_layers": -1,
+  "ctx_size": 4096,
+  "load_time_s": 9.1,
+  "speed": {
+    "avg_tok_s": 117.7,
+    "runs": [
+      {
+        "tokens": 105,
+        "time_s": 1.16,
+        "tok_s": 90.8
+      },
+      {
+        "tokens": 256,
+        "time_s": 2.03,
+        "tok_s": 126.1
+      },
+      {
+        "tokens": 256,
+        "time_s": 2.05,
+        "tok_s": 124.7
+      },
+      {
+        "tokens": 256,
+        "time_s": 2.05,
+        "tok_s": 125.0
+      },
+      {
+        "tokens": 256,
+        "time_s": 2.1,
+        "tok_s": 121.7
+      }
+    ]
+  },
+  "quality": {
+    "correct": 4,
+    "total": 5,
+    "accuracy": 80.0
+  },
+  "timestamp": "2026-04-06 22:16:44"
+}

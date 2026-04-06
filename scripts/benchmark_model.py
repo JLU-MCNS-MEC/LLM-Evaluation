@@ -63,13 +63,13 @@ def load_model(model_id: str, quant: str, cache_dir: str, is_vision: bool = Fals
         processor = AutoProcessor.from_pretrained(model_id, cache_dir=cache_dir, trust_remote_code=True)
         tokenizer = processor.tokenizer if hasattr(processor, 'tokenizer') else processor
     else:
-        # Try ImageTextToText first (for multimodal models like Gemma 4)
+        # Try CausalLM first (most models), then ImageTextToText (multimodal like Gemma 4)
         try:
+            model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
+        except ValueError:
             from transformers import AutoModelForImageTextToText
             model = AutoModelForImageTextToText.from_pretrained(model_id, **kwargs)
             print(f"  Loaded as ImageTextToText (multimodal model)")
-        except Exception:
-            model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
         tokenizer = AutoTokenizer.from_pretrained(model_id, cache_dir=cache_dir, trust_remote_code=True)
         processor = None
 
